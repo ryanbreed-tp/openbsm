@@ -65,10 +65,10 @@
 extern char	*optarg;
 extern int	 optind, optopt, opterr,optreset;
 
-static char	*del = ",";	/* Default delimiter. */
-static int	 oneline = 0;
+static char	*del = "\t";	/* Default delimiter. */
+static int	 oneline = 1;
 static int	 partial = 0;
-static int	 oflags = AU_OFLAG_NONE;
+static int	 oflags = AU_OFLAG_XML;
 
 static void
 usage(void)
@@ -134,7 +134,7 @@ main(int argc, char **argv)
 #endif
 	FILE *fp;
 
-	while ((ch = getopt(argc, argv, "d:lnprsx")) != -1) {
+	while ((ch = getopt(argc, argv, "d:lnprst")) != -1) {
 		switch(ch) {
 		case 'd':
 			del = optarg;
@@ -164,6 +164,10 @@ main(int argc, char **argv)
 			oflags |= AU_OFLAG_SHORT;
 			break;
 
+		case 't':
+			oflags ^= AU_OFLAG_XML;
+			break;
+
 		case 'x':
 			oflags |= AU_OFLAG_XML;
 			break;
@@ -191,8 +195,10 @@ main(int argc, char **argv)
 #endif
 #endif
 
+	/*
 	if (oflags & AU_OFLAG_XML)
 		au_print_xml_header(stdout);
+	*/
 
 	/* For each of the files passed as arguments dump the contents. */
 	if (optind == argc) {
@@ -201,7 +207,9 @@ main(int argc, char **argv)
 		if (retval != 0 && errno != ENOSYS)
 			err(EXIT_FAILURE, "cap_enter");
 #endif
-		print_tokens(stdin);
+		//print_tokens(stdin);
+		fp = fopen("/dev/auditpipe","r");
+		print_tokens(fp);
 		return (1);
 	}
 	for (i = optind; i < argc; i++) {
@@ -242,8 +250,10 @@ main(int argc, char **argv)
 		fclose(fp);
 	}
 
+	/*
 	if (oflags & AU_OFLAG_XML)
 		au_print_xml_footer(stdout);
+	*/
 
 	return (0);
 }

@@ -232,7 +232,7 @@ AC_TRY_LINK([
 
 # Check to see if Mach IPC is used for trigger messages.  If so, use Mach IPC
 # instead of the default for sending trigger messages to the audit components.
-AC_CHECK_FILE([/usr/include/mach/audit_triggers.defs], [
+AC_CHECK_FILE([/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/mach/audit_triggers.defs], [
 AC_DEFINE(USE_MACH_IPC,, Define if uses Mach IPC for Triggers messages)
 use_mach_ipc=true
 ], [
